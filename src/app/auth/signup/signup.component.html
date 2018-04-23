@@ -1,5 +1,5 @@
 <section>
-  <form fxLayout="column" fxLayoutAlign="center center" #refNgForm="ngForm" (ngSubmit)="onSubmit(birthday)">
+  <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" #refNgForm="ngForm" (ngSubmit)="onSubmit(refNgForm)">
     <mat-form-field>
       <input type="email" matInput placeholder="Your email" #emailInput="ngModel" ngModel name="email" email required>
       <mat-error *ngIf="!emailInput.hasError('required')">Invalid E-mail</mat-error>
@@ -12,13 +12,13 @@
     </mat-form-field>
     <mat-form-field>
       <!-- to set current date selected in '.ts' [formControl]="date" -->
-      <input matInput [matDatepicker]="picker" placeholder="Choose a date" [max]="maxDate" ngModel name="birthday" #birthday="ngModel" required>
+      <input matInput [matDatepicker]="picker" placeholder="Birthday" [max]="maxDate" ngModel name="birthday" #birthday="ngModel" required>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-checkbox ngModel name="agree">Agree to Terms and Conditions.</mat-checkbox>
+    <mat-checkbox ngModel name="agree" color="primary" required>Agree to Terms and Conditions.</mat-checkbox>
 
-    <button mat-raised-button color="primary">Submit</button>
+    <button mat-raised-button color="primary" [disabled]="refNgForm.invalid">Submit</button>
   </form>
 </section>
