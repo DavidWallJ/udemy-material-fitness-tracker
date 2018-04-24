@@ -1,3 +1,18 @@
-<p>
-  new-training works!
-</p>
+<section class="new-training" fxLayout fxLayoutAlign="center">
+  <mat-card fxFlex="400px" fxFlex.xs="100%" fxLayout="column" fxLayoutAlign="center center">
+    <mat-card-title>Time to start a workout!</mat-card-title>
+    <mat-card-content>
+      <mat-form-field>
+        <mat-select placeholder="Exercises">
+          <mat-option value="watching-tv">Watching TV</mat-option>
+          <mat-option value="getting-beer">Getting a Beer</mat-option>
+          <mat-option value="stretching">Streching</mat-option>
+          <mat-option value="ice-cream-curls">Ice Cream Curls</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button type="submit" mat-raised-button (click)="onStartTraining()" color="accent">Start</button>
+    </mat-card-actions>
+  </mat-card>
+</section>
