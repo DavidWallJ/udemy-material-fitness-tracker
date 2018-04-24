@@ -25,6 +25,7 @@ import {
 } from '@angular/material/core';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
+import { StopTrainingComponent } from './training/current-training/stop-training.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
     PastTrainingComponent,
     WelcomeComponent,
     HeaderComponent,
-    SidenavListComponent
+    SidenavListComponent,
+    StopTrainingComponent
   ],
   imports: [
     BrowserModule,
@@ -57,6 +59,9 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
     },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  // for components that aren't instantiated by a selector or routing we use 'entryComponents'
+  // for the dialog box
+  entryComponents: [StopTrainingComponent]
 })
 export class AppModule {}
