@@ -3,14 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-stop-training',
-  template: `<h1 mat-dialog-title>Are you sure?</h1>
-            <mat-dialog-content>
-              <p>You've completed {{ passedData.progress }}% of your workout</p>
-            </mat-dialog-content>
-            <mat-dialog-actions>
-              <button mat-raised-button [mat-dialog-close]="true">Yes</button>
-              <button mat-raised-button [mat-dialog-close]="false">No</button>
-            </mat-dialog-actions>`
+  templateUrl: './stop-training.component.html'
 })
 export class StopTrainingComponent {
   // this is how we get data from the 'this.dialog.open'

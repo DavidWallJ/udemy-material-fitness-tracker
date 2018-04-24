@@ -5,7 +5,7 @@ a {
 
 a:hover,
 a:active {
-  color: lightgray;
+  text-decoration: underline solid white;
 }
 
 .navigation-items {
