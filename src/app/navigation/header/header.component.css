@@ -3,9 +3,10 @@ a {
   color: white;
 }
 
-a:hover,
-a:active {
-  text-decoration: underline solid white;
+.headerNav a:hover,
+.headerNav a:active {
+  border-bottom: 2px solid #fff;
+  padding-bottom: 4px;
 }
 
 .navigation-items {

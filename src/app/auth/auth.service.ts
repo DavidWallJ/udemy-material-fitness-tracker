@@ -1,8 +1,11 @@
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 
 import { User } from './user.model';
 import { AuthData } from './auth-data.model';
 
+@Injectable()
 export class AuthService {
   // this seems to be how angular handles global state
   // 'EventEmitter' is only to be used for custom events that you emit in components
@@ -10,13 +13,14 @@ export class AuthService {
   authChange = new Subject<boolean>();
   private user: User;
 
+  constructor(private router: Router) {}
+
   registerUser(authData: AuthData) {
     this.user = {
       email: authData.email,
       userId: Math.round(Math.random() * 10000).toString()
     };
-    console.log(this.user);
-    this.authChange.next(true);
+    this.authSuccessfully();
   }
 
   login(authData: AuthData) {
@@ -24,13 +28,13 @@ export class AuthService {
       email: authData.email,
       userId: Math.round(Math.random() * 10000).toString()
     };
-    console.log(this.user);
-    this.authChange.next(true);
+    this.authSuccessfully();
   }
 
   logout() {
     this.user = null;
     this.authChange.next(false);
+    this.router.navigate(['/']);
   }
 
   getUser() {
@@ -41,5 +45,11 @@ export class AuthService {
 
   isAuth() {
     return this.user != null;
+  }
+
+  private authSuccessfully() {
+    console.log(this.user);
+    this.authChange.next(true);
+    this.router.navigate(['/training']);
   }
 }

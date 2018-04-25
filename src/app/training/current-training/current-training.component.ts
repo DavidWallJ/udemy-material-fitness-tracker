@@ -16,20 +16,20 @@ export class CurrentTrainingComponent implements OnInit {
 
   ngOnInit() {
     this.timer = setInterval(() => {
-      this.progress = this.progress + 5;
-      if (this.progress >= 100) {
+      this.progress = this.progress + 1;
+      if (this.progress >= 200) {
         clearInterval(this.timer);
       }
-    }, 1000);
+    }, 100);
   }
 
   startOrResumeTimer() {
     this.timer = setInterval(() => {
-      this.progress = this.progress + 5;
-      if (this.progress >= 100) {
+      this.progress = this.progress + 1;
+      if (this.progress >= 200) {
         clearInterval(this.timer);
       }
-    }, 1000);
+    }, 100);
   }
 
   onStop() {
