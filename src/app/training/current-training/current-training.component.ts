@@ -33,8 +33,8 @@ export class CurrentTrainingComponent implements OnInit {
         clearInterval(this.timer);
       }
     }, step);
-    if (this.progress)
-      this.selectedExercise = this.trainingService.getSelectedExercise().name;
+
+    this.selectedExercise = this.trainingService.getSelectedExercise().name;
   }
 
   onStop() {
