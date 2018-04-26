@@ -4,6 +4,7 @@ import { Exercise } from './exercise.model';
 
 export class TrainingService {
   exerciseChanged = new Subject<Exercise>();
+  private completedExercises: Exercise[] = [];
   private availableExercises: Exercise[] = [
     { id: 'drink-beer', name: 'Drink a Beer', duration: 30, calories: 280 },
     { id: 'take-a-nap', name: 'Take a Nap', duration: 180, calories: 15 },
@@ -30,8 +31,35 @@ export class TrainingService {
     this.exerciseChanged.next({ ...this.selectedExercise });
   }
 
+  completeExercise() {
+    this.completedExercises.push({
+      ...this.selectedExercise,
+      date: new Date(),
+      state: 'completed'
+    });
+    this.selectedExercise = null;
+    this.exerciseChanged.next(null);
+  }
+
+  cancelExercise(progress: number) {
+    this.completedExercises.push({
+      ...this.selectedExercise,
+      date: new Date(),
+      state: 'cancelled',
+      duration: this.selectedExercise.duration * (progress / 100),
+      calories: this.selectedExercise.calories * (progress / 100)
+    });
+    this.selectedExercise = null;
+    this.exerciseChanged.next(null);
+  }
+
   getSelectedExercise() {
     // how to not allow for mutation of an object
     return { ...this.selectedExercise };
+  }
+
+  getCompletedExercises() {
+    // how to not allow for mutation of an object
+    return this.completedExercises.slice();
   }
 }

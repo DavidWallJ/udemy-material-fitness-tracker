@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { StopTrainingComponent } from './stop-training.component';
@@ -11,7 +11,6 @@ import { Exercise } from '../exercise.model';
   styleUrls: ['./current-training.component.css']
 })
 export class CurrentTrainingComponent implements OnInit {
-  @Output() trainingExit = new EventEmitter();
   progress = 0;
   selectedExercise: Exercise['name'];
   timer;
@@ -30,14 +29,17 @@ export class CurrentTrainingComponent implements OnInit {
     this.timer = setInterval(() => {
       this.progress = this.progress + 1;
       if (this.progress >= 100) {
+        this.trainingService.completeExercise();
         clearInterval(this.timer);
       }
     }, step);
-    this.selectedExercise = this.trainingService.getSelectedExercise().name;
+    if (this.progress)
+      this.selectedExercise = this.trainingService.getSelectedExercise().name;
   }
 
   onStop() {
     clearInterval(this.timer);
+    // getting a ref to popup and passing it some data
     const dialogRef = this.dialog.open(StopTrainingComponent, {
       data: {
         progress: this.progress
@@ -51,7 +53,8 @@ export class CurrentTrainingComponent implements OnInit {
     // boolean: yes, i want to quit OR no, i don't want to quit
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.trainingExit.emit();
+        this.trainingService.cancelExercise(this.progress);
+        // this.trainingExit.emit();
       } else {
         this.startOrResumeTimer();
       }
