@@ -1,14 +1,17 @@
+import { Subject } from 'rxjs/Subject';
+
 import { Exercise } from './exercise.model';
 
 export class TrainingService {
+  exerciseChanged = new Subject<Exercise>();
   private availableExercises: Exercise[] = [
-    { id: 'drink-beer', name: 'Drink a Beer', duration: 30, calories: -280 },
-    { id: 'take-a-nap', name: 'Take a Nap', duration: 1800, calories: 15 },
+    { id: 'drink-beer', name: 'Drink a Beer', duration: 30, calories: 280 },
+    { id: 'take-a-nap', name: 'Take a Nap', duration: 180, calories: 15 },
     {
       id: 'ice-cream-curls',
       name: 'Ice Cream Curls',
-      duration: 120,
-      calories: -418
+      duration: 20,
+      calories: 418
     },
     { id: 'walk-the-cat', name: 'Walk the Cat', duration: 60, calories: 8 }
   ];
@@ -16,12 +19,19 @@ export class TrainingService {
   private selectedExercise: Exercise;
 
   getAvailableExercises() {
+    // how to not mutate an array
     return this.availableExercises.slice();
   }
 
-  startExercise(exerciseId: string) {
+  startExercise(exerciseName: string) {
     this.selectedExercise = this.availableExercises.find(
-      exercise => exercise.id === exerciseId
+      exercise => exercise.id === exerciseName
     );
+    this.exerciseChanged.next({ ...this.selectedExercise });
+  }
+
+  getSelectedExercise() {
+    // how to not allow for mutation of an object
+    return { ...this.selectedExercise };
   }
 }
