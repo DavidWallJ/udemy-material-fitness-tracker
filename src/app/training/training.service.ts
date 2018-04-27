@@ -8,13 +8,11 @@ import { Exercise } from './exercise.model';
 export class TrainingService {
   exerciseChanged = new Subject<Exercise>();
   exercisesLoaded = new Subject<Exercise[]>();
+  completedExercisesLoaded = new Subject<Exercise[]>();
   private completedExercises: Exercise[] = [];
   private availableExercises: Exercise[] = [];
 
-  constructor(private db: AngularFirestore) {
-    const settings = { timestampsInSnapshots: true };
-    db.app.firestore().settings(settings);
-  }
+  constructor(private db: AngularFirestore) {}
 
   private selectedExercise: Exercise;
 
@@ -77,9 +75,15 @@ export class TrainingService {
     return { ...this.selectedExercise };
   }
 
-  getCompletedExercises() {
+  fetchCompletedExercises() {
     // how to not allow for mutation of an object
-    return this.completedExercises.slice();
+    // return this.completedExercises.slice();
+    this.db
+      .collection('completedExercises')
+      .valueChanges()
+      .subscribe((completedExercises: Exercise[]) => {
+        this.completedExercisesLoaded.next(completedExercises);
+      });
   }
 
   addCompletedExerciseToDB(exercise) {
