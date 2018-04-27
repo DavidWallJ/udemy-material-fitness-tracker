@@ -1,27 +1,46 @@
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Subject } from 'rxjs/Subject';
 
 import { Exercise } from './exercise.model';
 
+@Injectable()
 export class TrainingService {
   exerciseChanged = new Subject<Exercise>();
+  exercisesLoaded = new Subject<Exercise[]>();
   private completedExercises: Exercise[] = [];
-  private availableExercises: Exercise[] = [
-    { id: 'drink-beer', name: 'Drink a Beer', duration: 30, calories: 280 },
-    { id: 'take-a-nap', name: 'Take a Nap', duration: 180, calories: 15 },
-    {
-      id: 'ice-cream-curls',
-      name: 'Ice Cream Curls',
-      duration: 20,
-      calories: 418
-    },
-    { id: 'walk-the-cat', name: 'Walk the Cat', duration: 60, calories: 8 }
-  ];
+  private availableExercises: Exercise[] = [];
+
+  constructor(private db: AngularFirestore) {
+    const settings = { timestampsInSnapshots: true };
+    db.app.firestore().settings(settings);
+  }
 
   private selectedExercise: Exercise;
 
-  getAvailableExercises() {
+  fetchAvailableExercises() {
     // how to not mutate an array
-    return this.availableExercises.slice();
+    this.db
+      .collection('availableExercises')
+      // here we are maping over the array of objects
+      // and then mapping over and altering the contents of each object
+      // we're doing this to change the structure of the results array
+      // we want the 'id' feild with all the other data
+      .snapshotChanges()
+      // rxjs map operator
+      .map(docArray => {
+        // regular JavaScript map
+        return docArray.map(doc => {
+          return {
+            id: doc.payload.doc.id,
+            ...doc.payload.doc.data()
+          };
+        });
+      })
+      .subscribe((exercises: Exercise[]) => {
+        this.availableExercises = exercises;
+        this.exercisesLoaded.next([...this.availableExercises]);
+      });
   }
 
   startExercise(exerciseName: string) {
@@ -32,7 +51,7 @@ export class TrainingService {
   }
 
   completeExercise() {
-    this.completedExercises.push({
+    this.addCompletedExerciseToDB({
       ...this.selectedExercise,
       date: new Date(),
       state: 'completed'
@@ -42,7 +61,7 @@ export class TrainingService {
   }
 
   cancelExercise(progress: number) {
-    this.completedExercises.push({
+    this.addCompletedExerciseToDB({
       ...this.selectedExercise,
       date: new Date(),
       state: 'cancelled',
@@ -61,5 +80,9 @@ export class TrainingService {
   getCompletedExercises() {
     // how to not allow for mutation of an object
     return this.completedExercises.slice();
+  }
+
+  addCompletedExerciseToDB(exercise) {
+    this.db.collection('completedExercises').add(exercise);
   }
 }
